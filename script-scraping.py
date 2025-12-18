@@ -14,30 +14,52 @@ def fetch_page(url):
         print(f"[ERREUR] impossible de recuperer la page : {error}")
         return None
 
+
+def parse_produits(html):
+    """
+    Analyse le HTML et extrait le nom et le prix des produits
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    produits = []
+
+    produits_div = soup.find_all("div", class_="product")
+
+    for produit in produits_div:
+        # ----- NOM -----
+        titre_tag = produit.find("h3", class_="product-title")
+        if not titre_tag:
+            continue
+
+        lien_tag = titre_tag.find("a")
+        nom = lien_tag.get_text(strip=True)
+
+        # ----- PRIX -----
+        price_tag = produit.find("span", class_="price")
+        if not price_tag:
+            continue
+
+        prix = price_tag.get_text(strip=True)
+
+        produits.append({
+            "nom": nom,
+            "prix": prix
+        })
+
+    return produits
+
+
+
 def main():
     """
-    Fonction principale pour tester fetch_page avec différents cas.
+    Fonction principale pour tester  avec différents cas.
     """
-    print("=== Test de la fonction fetch_page ===\n")
+    print("=== Test de la fonction parse_produits ===\n")
 
-    # Liste d'URLs à tester (incluant des cas valides et invalides)
-    test_urls = [
-        "https://www.manojia.com/product-category/electromenagers/",  # Site valide
-        "https://www.manojia.com/product-category/electronique/",  # Site valide
-        "https://www.manojia.com/product-category/electronique/2211",  # Retourne 200
-        "https://www.manojia.com/product-category/electromenagers/404",
-    ]
+    html = fetch_page("https://www.manojia.com/product-category/electromenagers/")
+    produits = parse_produits(html)
 
-    for url in test_urls:
-        print(f"[TEST] : {url}")
-
-        html = fetch_page(url)
-
-        if html:
-            print(f"[SUCCESS] Page récupérée  ({len(html)} caractères)\n")
-        else:
-            print(f"[ECHEC] Échec de la récupération\n")
-
+    for p in produits:
+        print(p)
 
 if __name__ == "__main__":
     main()
