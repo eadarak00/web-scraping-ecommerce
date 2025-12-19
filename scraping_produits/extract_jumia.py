@@ -1,53 +1,60 @@
 from bs4 import BeautifulSoup
 from datetime import datetime
-from utils import nettoyer_prix
-
-
-def determiner_categorie(url):
-    url = url.lower()
-    if "electromenager" in url:
-        return "electromenager"
-    if "informatique" in url or "electronique" in url:
-        return "multimedia"
-    return "autre"
+from utils import nettoyer_prix, recuperer_page, MAX_PAGES, determiner_categorie
 
 
 def extraire_jumia(html, url):
     """
-    Scraping Jumia (une seule page, sans pagination)
+    Scraping Jumia avec pagination `?page=num#catalog-listing`
     """
     produits = []
-
-    if html is None:
-        return produits
-
     categorie = determiner_categorie(url)
 
-    soup = BeautifulSoup(html, "html.parser")
-    produits_tag = soup.find_all("article", class_="prd")
+    base_url = url.split("?")[0]  # enlever toute query existante
+    page = 1
 
-    for produit in produits_tag:
-        try:
-            # ---- NOM ----
-            nom_tag = produit.find("h3", class_="name")
-            nom = nom_tag.get_text(strip=True) if nom_tag else None
+    while page <= MAX_PAGES:
+        # Construire l'URL paginée
+        if page == 1:
+            page_url = base_url
+        else:
+            page_url = f"{base_url}?page={page}#catalog-listing"
 
-            # ---- PRIX ACTUEL ----
-            prix_tag = produit.find("div", class_="prc")
-            prix_brut = prix_tag.get_text(strip=True) if prix_tag else None
-            prix = nettoyer_prix(prix_brut)
+        print(f"  → Jumia page {page} : {page_url}")
 
-            if nom and prix:
-                produits.append({
-                    "nom": nom,
-                    "prix": prix,
-                    "categorie": categorie,
-                    "vendeur": "Jumia",
-                    "date_collection": datetime.now().isoformat()
-                })
+        page_html = recuperer_page(page_url)
+        if not page_html:
+            break
 
-        except Exception as error:
-            print("[ERREUR] Problème lors de l'extraction Jumia")
-            print(error)
+        soup = BeautifulSoup(page_html, "html.parser")
+        produits_tag = soup.find_all("article", class_="prd")
+
+        if not produits_tag:
+            print("[X] Plus de produits Jumia, arrêt pagination")
+            break
+
+        for produit in produits_tag:
+            try:
+                # ---- NOM ----
+                nom_tag = produit.find("h3", class_="name")
+                nom = nom_tag.get_text(strip=True) if nom_tag else None
+
+                # ---- PRIX ACTUEL ----
+                prix_tag = produit.find("div", class_="prc")
+                prix_brut = prix_tag.get_text(strip=True) if prix_tag else None
+                prix = nettoyer_prix(prix_brut)
+
+                if nom and prix:
+                    produits.append({
+                        "nom": nom,
+                        "prix": prix,
+                        "categorie": categorie,
+                        "vendeur": "Jumia",
+                        "date_collection": datetime.now().isoformat()
+                    })
+            except Exception as error:
+                print("[ERREUR] Jumia :", error)
+
+        page += 1
 
     return produits

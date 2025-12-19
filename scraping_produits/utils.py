@@ -4,6 +4,7 @@ import re
 
 TIMEOUT = 15
 
+MAX_PAGES = 10
 
 # Création d'une session globale
 session = requests.Session()
@@ -48,3 +49,15 @@ def nettoyer_prix(prix):
     prix = prix.replace(" ", "").strip()
 
     return prix
+
+
+def determiner_categorie(url):
+    """
+    Détermine la catégorie Manojia à partir de l'URL
+    """
+    url = url.lower()
+    if "electronique" in url or "informatique" in url:
+        return "multimedia"
+    if "electromenagers" in url or "électroménagers" in url:
+        return "electromenager"
+    return "autre"

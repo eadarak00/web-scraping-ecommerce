@@ -1,19 +1,7 @@
 from bs4 import BeautifulSoup
 from datetime import datetime
-from utils import nettoyer_prix, recuperer_page
+from utils import nettoyer_prix, recuperer_page,determiner_categorie, MAX_PAGES
 
-MAX_PAGES = 10  # nombre maximum de pages à scraper
-
-def determiner_categorie(url):
-    """
-    Détermine la catégorie Manojia à partir de l'URL
-    """
-    url = url.lower()
-    if "electronique" in url or "informatique" in url:
-        return "multimedia"
-    if "electromenagers" in url or "électroménagers" in url:
-        return "electromenager"
-    return "autre"
 
 def extraire_manojia(html, url):
     """

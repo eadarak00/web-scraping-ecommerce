@@ -3,20 +3,7 @@ from tkinter.tix import MAX
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-from scraping_produits.extract_manojia import MAX_PAGES
-from utils import nettoyer_prix, recuperer_page
-
-MAX_PAGES = 10 # nombre maximum de pages à scraper
-
-def determiner_categorie(url):
-    """
-    Détermine la catégorie Expat-Dakar à partir de l'URL
-    """
-    if "electromenagers" in url or "électroménagers" in url or "electromenager" in url:
-        return "electromenager"
-    if "multimedia" in url:
-        return "multimedia"
-    return "autre"
+from utils import nettoyer_prix, recuperer_page, determiner_categorie, MAX_PAGES
 
 
 def extraire_expat_dakar(html, url):
