@@ -1,9 +1,11 @@
 import csv
 import os
+
 from utils import recuperer_page
 from extract_manojia import extraire_manojia
 from extract_expat_dakar import extraire_expat_dakar
 from extract_dakarmarket import extraire_dakarmarket
+from extract_jumia import  extraire_jumia
 
 
 SITES = {
@@ -26,6 +28,10 @@ SITES = {
     "dakar-market": {
         "url": "https://dakarmarket.sn/shopping?categorie=electronique",
         "extract": extraire_dakarmarket
+    },
+    "jumia":{
+        "url": "https://www.jumia.sn/maison-bureau-electromenager/",
+        "extract": extraire_jumia
     }
 }
 
@@ -38,7 +44,7 @@ def main():
         html = recuperer_page(config["url"])
 
         if html:
-            if site.startswith("expat") or site.startswith("manojia"):
+            if site.startswith("expat") or site.startswith("manojia") or site.startswith("jumia"):
                 produits = config["extract"](html, config["url"])
             else:
                 produits = config["extract"](html)
