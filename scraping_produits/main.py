@@ -1,15 +1,23 @@
 import csv
 import os
 from utils import recuperer_page
-from extract_manojia import extraire_manojia_produits
+from extract_manojia import extraire_manojia
 from extract_expat_dakar import extraire_expat_dakar
 from extract_dakarmarket import extraire_dakarmarket
 
 
 SITES = {
     "manojia": {
+        "url": "https://www.manojia.com/product-category/informatique",
+        "extract": extraire_manojia
+    },
+    "manojia-multimedia": {
         "url": "https://www.manojia.com/product-category/electronique",
-        "extract": extraire_manojia_produits
+        "extract": extraire_manojia
+    },
+    "manojia-electromenagers": {
+        "url": "https://www.manojia.com/product-category/electromenagers",
+        "extract": extraire_manojia
     },
     "expat-multimedia": {
         "url": "https://www.expat-dakar.com/multimedia",
@@ -30,7 +38,7 @@ def main():
         html = recuperer_page(config["url"])
 
         if html:
-            if site.startswith("expat"):
+            if site.startswith("expat") or site.startswith("manojia"):
                 produits = config["extract"](html, config["url"])
             else:
                 produits = config["extract"](html)
