@@ -56,8 +56,8 @@ def determiner_categorie(url):
     Détermine la catégorie Manojia à partir de l'URL
     """
     url = url.lower()
-    if "electronique" in url or "informatique" in url:
+    if "electronique" in url or "informatique" in url or "multimedia" in url:
         return "multimedia"
-    if "electromenagers" in url or "électroménagers" in url:
+    if "electromenagers" in url or "électroménagers" in url or "electromenager" in url:
         return "electromenager"
     return "autre"
