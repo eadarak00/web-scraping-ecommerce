@@ -1,0 +1,14 @@
+services:
+  cassandra:
+    image: cassandra:4.1
+    container_name: cassandra-lab
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+      - ./output:/data
+      - ./schema.cql:/schema.cql
+    restart: unless-stopped
+
+volumes:
+  cassandra_data:
