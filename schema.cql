@@ -34,6 +34,6 @@ CREATE INDEX IF NOT EXISTS idx_produits_nom
 ON produits (nom);
 
 COPY produits (nom, prix, categorie, vendeur, date_collection)
-FROM '/home/eadarak/projets/web-scraping-ecommerce/output/produits_clean.csv'
+FROM '/data/produits_clean.csv'
 WITH HEADER = TRUE
 AND DELIMITER = ',';
