@@ -7,8 +7,8 @@ import requests
 from requests.exceptions import RequestException
 from tqdm import tqdm
 
-
 # CONFIGURATION ET UTILITAIRES
+
 TIMEOUT = 15
 MAX_PAGES = 10
 
@@ -37,13 +37,6 @@ def recuperer_page(url):
         return None
 
 
-def nettoyer_prix(prix):
-    """
-    Nettoie le prix (actuellement retourne le prix tel quel)
-    """
-    return prix
-
-
 def determiner_categorie(url):
     """
     Détermine la catégorie Manojia à partir de l'URL
@@ -56,9 +49,8 @@ def determiner_categorie(url):
     return "autre"
 
 
-
 # EXTRACTEURS PAR SITE
-# Extraction des produits du site Manojia
+
 def extraire_manojia(html, url):
     """
     Extrait les produits depuis Manojia avec gestion de la pagination
@@ -95,8 +87,7 @@ def extraire_manojia(html, url):
                 nom = titre_tag.get_text(strip=True)
 
                 prix_tag = produit.find("span", class_="price")
-                prix_brut = prix_tag.get_text(strip=True) if prix_tag else None
-                prix = nettoyer_prix(prix_brut)
+                prix = prix_tag.get_text(strip=True) if prix_tag else None
 
                 produits.append({
                     "nom": nom,
@@ -115,7 +106,6 @@ def extraire_manojia(html, url):
     return produits
 
 
-#Extraction des produits du site Manojia
 def extraire_jumia(html, url):
     """
     Scraping Jumia avec pagination ?page=num#catalog-listing
@@ -154,8 +144,7 @@ def extraire_jumia(html, url):
 
                 # ---- PRIX ACTUEL ----
                 prix_tag = produit.find("div", class_="prc")
-                prix_brut = prix_tag.get_text(strip=True) if prix_tag else None
-                prix = nettoyer_prix(prix_brut)
+                prix = prix_tag.get_text(strip=True) if prix_tag else None
 
                 produits.append({
                     "nom": nom,
@@ -171,7 +160,61 @@ def extraire_jumia(html, url):
 
     return produits
 
-#Extraction des produits du site Manojia
+def extraire_jumia_electromenager(html, url):
+    """
+    Scraping Jumia avec pagination ?page=num#catalog-listing
+    """
+    produits = []
+    categorie = determiner_categorie(url)
+
+    base_url = url.split("?")[0]  # enlever toute query existante
+    page = 1
+
+    while page <= 30:
+        # Construire l'URL paginée
+        if page == 1:
+            page_url = base_url
+        else:
+            page_url = f"{base_url}?page={page}#catalog-listing"
+
+        print(f"  → Jumia page {page} : {page_url}")
+
+        page_html = recuperer_page(page_url)
+        if not page_html:
+            break
+
+        soup = BeautifulSoup(page_html, "html.parser")
+        produits_tag = soup.find_all("article", class_="prd")
+
+        if not produits_tag:
+            print("[X] Plus de produits Jumia, arrêt pagination")
+            break
+
+        for produit in produits_tag:
+            try:
+                # ---- NOM ----
+                nom_tag = produit.find("h3", class_="name")
+                nom = nom_tag.get_text(strip=True) if nom_tag else None
+
+                # ---- PRIX ACTUEL ----
+                prix_tag = produit.find("div", class_="prc")
+                prix = prix_tag.get_text(strip=True) if prix_tag else None
+
+                produits.append({
+                    "nom": nom,
+                    "prix": prix,
+                    "categorie": categorie,
+                    "vendeur": "Jumia",
+                    "date_collection": datetime.now()
+                })
+            except Exception as error:
+                print("[ERREUR] Jumia :", error)
+
+        page += 1
+
+    return produits
+
+
 def extraire_expat_dakar(html, url):
     """
     Extraction des produits depuis Expat-Dakar avec pagination automatique
@@ -181,7 +224,7 @@ def extraire_expat_dakar(html, url):
 
     page = 1
 
-    while page <= MAX_PAGES:
+    while page <= 30:
         # Construction URL paginée
         if page == 1:
             page_url = url
@@ -214,8 +257,7 @@ def extraire_expat_dakar(html, url):
                     "span",
                     class_="cars-listing-card__price__value"
                 )
-                prix_brut = prix_tag.get_text(strip=True) if prix_tag else None
-                prix = nettoyer_prix(prix_brut)
+                prix = prix_tag.get_text(strip=True) if prix_tag else None
 
                 if nom and prix:
                     produits.append({
@@ -235,8 +277,8 @@ def extraire_expat_dakar(html, url):
     return produits
 
 
-
 # CONFIGURATION DES SITES À SCRAPER
+
 SITES = {
     "manojia": {
         "url": "https://www.manojia.com/product-category/informatique",
@@ -256,7 +298,7 @@ SITES = {
     },
     "jumia": {
         "url": "https://www.jumia.sn/maison-bureau-electromenager/",
-        "extract": extraire_jumia
+        "extract": extraire_jumia_electromenager
     },
     "jumia-informatique": {
         "url": "https://www.jumia.sn/ordinateurs-accessoires-informatique/",
@@ -264,7 +306,9 @@ SITES = {
     }
 }
 
+
 # FONCTION PRINCIPALE
+
 def main():
     tous_les_produits = []
 
