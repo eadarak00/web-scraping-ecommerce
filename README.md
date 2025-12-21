@@ -2,7 +2,21 @@
 
 Ce projet implémente un pipeline complet de données, allant du scraping de sites e-commerce à l'analyse des données avec Spark, en passant par un nettoyage ETL et un stockage dans Cassandra.
 
-## 📋 Prérequis
+## Table des Matières
+
+1.  [Prérequis](#prérequis)
+2.  [Installation](#installation)
+3.  [Utilisation du Pipeline](#utilisation-du-pipeline)
+    *   [1. Scraping des Données](#1-scraping-des-données)
+    *   [2. Nettoyage des Données (ETL)](#2-nettoyage-des-données-etl)
+    *   [3. Lancement de l'Infrastructure](#3-lancement-de-linfrastructure)
+    *   [4. Configuration de la Base de Données (Cassandra)](#4-configuration-de-la-base-de-données-cassandra)
+    *   [5. Analyse des Données (Spark)](#5-analyse-des-données-spark)
+4.  [Structure du Projet](#-structure-du-projet)
+5.  [Auteurs / Contexte Académique](#-auteurs--contexte-académique)
+
+
+## Prérequis
 
 Avant de commencer, assurez-vous d'avoir installé les outils suivants :
 
@@ -11,7 +25,7 @@ Avant de commencer, assurez-vous d'avoir installé les outils suivants :
 *   **Pentaho Data Integration (PDI)** : Pour exécuter les jobs ETL de nettoyage.
 *   **Java (JDK 17 recommandé)** : Nécessaire pour exécuter Spark et Pentaho.
 
-## 🚀 Installation
+## Installation
 
 1.  Clonez ce dépôt :
     ```bash
@@ -101,3 +115,25 @@ Le script affichera dans la console :
 *   `docker-compose.yml` : Configuration Docker pour Cassandra.
 *   `schema.cql` : Script CQL pour la structure de la base de données et l'import.
 *   `spark.py` : Script d'analyse PySpark connecté à Cassandra.
+
+---
+
+## Auteurs / Contexte Académique
+
+Ce projet a été réalisé dans le cadre d'un cursus universitaire. Il vise à démontrer la mise en œuvre d'une architecture Big Data complète pour l'ingestion, le traitement et l'analyse de données.
+
+**Développeur :**
+*   El Hadji Abdou DRAME - Étudiant en Master 2 Informatique Specialite Génie Logiciel à l'Université Assane Seck de Ziguinchor
+* Email : [elabdoudrame2001@gmail.com](mailto:elabdoudrame2001@gmail.com)
+* LinkedIn : [Profile LinkedIn](https://www.linkedin.com/in/elhadji-abdou-drame/)
+* GitHub : [Profile GitHub](https://github.com/eadarak00)
+* Portfolio : [Profile LinkedIn](https://eadarak-dev.netlify.app/)
+
+**Encadreur :**
+*   Mme. Marie DIOP NDIAYE - Professeure d'Informatique à l'Université Assane Seck de Ziguinchor
+
+**Objectifs Pédagogiques :**
+*   Maîtriser le scraping de données web.
+*   Mettre en place des pipelines ETL avec Pentaho.
+*   Administrer une base de données NoSQL (Cassandra) via Docker.
+*   Effectuer des traitements distribués avec Apache Spark.
