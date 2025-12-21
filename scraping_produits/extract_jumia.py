@@ -44,14 +44,13 @@ def extraire_jumia(html, url):
                 prix_brut = prix_tag.get_text(strip=True) if prix_tag else None
                 prix = nettoyer_prix(prix_brut)
 
-                if nom and prix:
-                    produits.append({
-                        "nom": nom,
-                        "prix": prix,
-                        "categorie": categorie,
-                        "vendeur": "Jumia",
-                        "date_collection": datetime.now().isoformat()
-                    })
+                produits.append({
+                    "nom": nom,
+                    "prix": prix,
+                    "categorie": categorie,
+                    "vendeur": "Jumia",
+                    "date_collection": datetime.now()
+                })
             except Exception as error:
                 print("[ERREUR] Jumia :", error)
 

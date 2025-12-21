@@ -31,33 +31,36 @@ def recuperer_page(url):
         return None
 
 
+# def nettoyer_prix(prix):
+#     """
+#     Nettoie le prix en supprimant toutes les variantes de 'FCFA'
+#     et les espaces. Retourne le prix sous forme de string propre.
+#     Exemples supprimés : FCFA, F CFA, f cfa, F.cfa, CFA, etc.
+#     """
+#     if not prix:
+#         return None
+#
+#     # Supprime toutes les variantes de FCFA / CFA (insensible à la casse)
+#     prix = re.sub(r"f?\s*[\.\-]?\s*cfa", "", prix, flags=re.IGNORECASE)
+#
+#     # Supprime les espaces classiques et insécables
+#     prix = prix.replace("\u202f", "")  # espace insécable fine
+#     prix = prix.replace("\xa0", "")    # espace insécable
+#     prix = prix.replace(" ", "").strip()
+#
+#     return prix
+
+
 def nettoyer_prix(prix):
-    """
-    Nettoie le prix en supprimant toutes les variantes de 'FCFA'
-    et les espaces. Retourne le prix sous forme de string propre.
-    Exemples supprimés : FCFA, F CFA, f cfa, F.cfa, CFA, etc.
-    """
-    if not prix:
-        return None
-
-    # Supprime toutes les variantes de FCFA / CFA (insensible à la casse)
-    prix = re.sub(r"f?\s*[\.\-]?\s*cfa", "", prix, flags=re.IGNORECASE)
-
-    # Supprime les espaces classiques et insécables
-    prix = prix.replace("\u202f", "")  # espace insécable fine
-    prix = prix.replace("\xa0", "")    # espace insécable
-    prix = prix.replace(" ", "").strip()
-
     return prix
-
 
 def determiner_categorie(url):
     """
     Détermine la catégorie Manojia à partir de l'URL
     """
     url = url.lower()
-    if "electronique" in url or "informatique" in url:
+    if "electronique" in url or "informatique" in url or "multimedia" in url:
         return "multimedia"
-    if "electromenagers" in url or "électroménagers" in url:
+    if "electromenagers" in url or "électroménagers" in url or "electromenager" in url:
         return "electromenager"
     return "autre"

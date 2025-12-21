@@ -57,7 +57,7 @@ def extraire_expat_dakar(html, url):
                         "prix": prix,
                         "categorie": categorie,
                         "vendeur": "Expat-Dakar",
-                        "date_collection": datetime.now().isoformat(),
+                        "date_collection": datetime.now()
                     })
 
             except Exception as error:

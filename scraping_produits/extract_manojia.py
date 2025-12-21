@@ -48,7 +48,7 @@ def extraire_manojia(html, url):
                     "prix": prix,
                     "categorie": categorie,
                     "vendeur": "Manojia",
-                    "date_collection": datetime.now().isoformat()
+                    "date_collection": datetime.now()
                 })
 
             except Exception as error:
