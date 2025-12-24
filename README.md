@@ -29,7 +29,7 @@ Avant de commencer, assurez-vous d'avoir installé les outils suivants :
 
 1.  Clonez ce dépôt :
     ```bash
-    git clone <votre-repo-url>
+    git clone https://github.com/eadarak00/web-scraping-ecommerce.git
     cd web-scraping-ecommerce
     ```
 2.  Créez un environnement virtuel Python :
